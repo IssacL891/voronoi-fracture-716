@@ -1,0 +1,14 @@
+{
+    "name": "com.geometry.geometry",
+    "version": "0.1.0",
+    "displayName": "Geometry",
+    "unity": "6000.2",
+    "description": "Voronoi geometry library (local package)",
+    "keywords": [
+        "geometry",
+        "voronoi"
+    ],
+    "author": {
+        "name": "Issac"
+    }
+}
