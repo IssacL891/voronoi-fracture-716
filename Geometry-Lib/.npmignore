@@ -1,0 +1,9 @@
+bin/
+obj/
+samples/
+geometry-net/
+Geometry/
+*.csproj
+*.sln
+*.meta
+.DS_Store
