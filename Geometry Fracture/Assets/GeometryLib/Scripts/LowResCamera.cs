@@ -1,19 +1,26 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Renders camera output to a low-resolution RenderTexture for retro/pixel-art aesthetic.
+/// Automatically creates Canvas + RawImage UI if not provided.
+/// Supports dynamic resolution adjustment based on screen size.
+/// </summary>
 [RequireComponent(typeof(Camera))]
 public class LowResCamera : MonoBehaviour
 {
-    [Tooltip("Integer downscale factor: 1 = native, 2 = half res, 4 = quarter, etc.")]
+    [Header("Resolution")]
+    [Tooltip("Downscale factor: 1=native, 2=half res, 4=quarter res")]
     public int pixelScale = 4;
 
-    [Tooltip("Optional target pixel height. If >0 this will override pixelScale and compute width to preserve aspect ratio.")]
+    [Tooltip("Target pixel height (overrides pixelScale if > 0)")]
     public int targetPixelHeight = 0;
 
-    [Tooltip("Optional RawImage to display the low-res buffer. If null the script will create a Canvas+RawImage.")]
+    [Header("Output")]
+    [Tooltip("RawImage to display low-res buffer (auto-created if null)")]
     public RawImage outputRawImage;
 
-    [Tooltip("Optional material to apply to the RawImage (e.g. PixelToon). If null, uses default UI material.")]
+    [Tooltip("Material for RawImage (e.g. PixelToon shader)")]
     public Material outputMaterial;
 
     Camera cam;

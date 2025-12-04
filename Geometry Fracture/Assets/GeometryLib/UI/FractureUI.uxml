@@ -1,0 +1,79 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="FractureUI.uss" />
+    <ui:VisualElement name="Root" picking-mode="Ignore">
+        <!-- Toggle Button (always visible) -->
+        <ui:Button name="ToggleButton" text="☰" class="toggle-button" picking-mode="Position" />
+        
+        <!-- Collapsible Panel -->
+        <ui:VisualElement name="Panel" class="panel-visible" picking-mode="Position">
+        <ui:VisualElement name="Container" picking-mode="Position">
+            
+            <!-- Header -->
+            <ui:Label text="Fracture Prefab Spawner" display-tooltip-when-elided="true" name="Title" picking-mode="Position" />
+            
+            <!-- Prefab Selection -->
+            <ui:VisualElement name="PrefabSection" class="section" picking-mode="Position">
+                <ui:Label text="Prefab Selection" display-tooltip-when-elided="true" class="section-header" picking-mode="Position" />
+                
+                <ui:VisualElement name="SelectionRow" style="flex-direction: row; margin-bottom: 10px;" picking-mode="Position">
+                    <ui:Button text="&lt;" display-tooltip-when-elided="true" name="PrevButton" picking-mode="Position" />
+                    <ui:DropdownField label="Prefab" index="0" name="PrefabDropdown" picking-mode="Position" />
+                    <ui:Button text="&gt;" display-tooltip-when-elided="true" name="NextButton" picking-mode="Position" />
+                </ui:VisualElement>
+                
+                <ui:Label text="Selected: None" display-tooltip-when-elided="true" name="SelectedPrefabLabel" picking-mode="Position" />
+                
+                <ui:Button text="CLEAR ALL FRAGMENTS" display-tooltip-when-elided="true" name="ClearButton" class="clear-button" picking-mode="Position" />
+            </ui:VisualElement>
+            
+            <!-- Fracture Parameters -->
+            <ui:VisualElement name="ParametersSection" class="section" picking-mode="Position">
+                <ui:Label text="Fracture Parameters" display-tooltip-when-elided="true" class="section-header" picking-mode="Position" />
+                
+                <ui:VisualElement name="InitialFractureGroup" class="margin-bottom-large" picking-mode="Position">
+                    <ui:Label text="Initial Fracture" display-tooltip-when-elided="true" class="group-header" picking-mode="Position" />
+                    
+                    <ui:SliderInt picking-mode="Position" label="Site Count" value="8" high-value="30" name="SiteCountSlider" low-value="3" show-input-field="true" class="margin-bottom-small" />
+                    
+                    <ui:Slider picking-mode="Position" label="Site Jitter" value="0.2" high-value="1" name="SiteJitterSlider" low-value="0" show-input-field="true" class="margin-bottom-small" />
+                </ui:VisualElement>
+                
+                <ui:VisualElement name="RuntimeFractureGroup" class="margin-bottom-large" picking-mode="Position">
+                    <ui:Label text="Runtime Fracture" display-tooltip-when-elided="true" class="group-header" picking-mode="Position" />
+                    
+                    <ui:Toggle label="Enable Runtime Fracture" name="EnableRuntimeFractureToggle" value="true" class="margin-bottom-small" picking-mode="Position" />
+                    
+                    <ui:Toggle label="Wait for Collision" name="WaitForCollisionToggle" value="false" class="margin-bottom-small" tooltip="Only fracture when objects collide with each other" picking-mode="Position" />
+                    
+                    <ui:Slider picking-mode="Position" label="Impact Threshold" value="5" high-value="20" name="BreakImpactThresholdSlider" low-value="0" show-input-field="true" class="margin-bottom-small" />
+                    
+                    <ui:SliderInt picking-mode="Position" label="Runtime Sites" value="6" high-value="20" name="RuntimeSiteCountSlider" low-value="2" show-input-field="true" class="margin-bottom-small" />
+                    
+                    <ui:SliderInt picking-mode="Position" label="Break Depth" value="1" high-value="3" name="RuntimeBreakDepthSlider" low-value="0" show-input-field="true" class="margin-bottom-small" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            
+            <!-- Time Rewinder Section -->
+            <ui:VisualElement name="TimeRewinderSection" class="section" picking-mode="Position">
+                <ui:Label text="Time Rewinder" display-tooltip-when-elided="true" class="section-header" picking-mode="Position" />
+                
+                <ui:Label text="Available: 0.0s" display-tooltip-when-elided="true" name="RewindTimeLabel" class="margin-bottom-small" style="font-size: 14px; -unity-font-style: bold;" picking-mode="Position" />
+                
+                <!-- Rewind Slider (0-12 seconds) -->
+                <ui:Slider picking-mode="Position" label="Rewind Time" value="0" high-value="12" name="RewindSlider" low-value="0" show-input-field="true" class="margin-bottom-small" style="margin-top: 10px;" />
+                
+                <!-- Control Buttons -->
+                <ui:VisualElement name="RewindControlRow" style="flex-direction: row; justify-content: space-between; margin-top: 5px;" picking-mode="Position">
+                    <ui:Button text="Pause Time" display-tooltip-when-elided="true" name="PauseTimeButton" class="rewind-button" picking-mode="Position" />
+                    <ui:Button text="Reset Time" display-tooltip-when-elided="true" name="ResetTimeButton" class="rewind-button" picking-mode="Position" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            
+            
+            <!-- Instructions -->
+            <ui:Label text="Click anywhere in the scene to spawn selected prefab" display-tooltip-when-elided="true" class="instructions" picking-mode="Position" />
+            
+        </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

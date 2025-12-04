@@ -1,0 +1,323 @@
+/* Fracture UI Styles */
+
+/* Root container - no background, transparent */
+#Root {
+    flex-grow: 1;
+}
+
+/* Toggle Button - always visible in top-left */
+#ToggleButton {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 50px;
+    height: 50px;
+    font-size: 28px;
+    background-color: rgba(70, 130, 180, 0.9);
+    color: rgb(255, 255, 255);
+    border-radius: 8px;
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.3);
+    z-index: 100;
+}
+
+#ToggleButton:hover {
+    background-color: rgba(90, 150, 200, 0.95);
+    scale: 1.1;
+}
+
+#ToggleButton:active {
+    background-color: rgba(50, 110, 160, 0.95);
+    scale: 0.95;
+}
+
+/* Collapsible Panel - slides in from left */
+#Panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 380px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    transition-duration: 0.3s;
+    transition-property: translate;
+    z-index: 50;
+}
+
+.panel-visible {
+    translate: 0 0;
+}
+
+.panel-hidden {
+    translate: -380px 0;
+}
+
+/* Main container with padding */
+#Container {
+    padding: 20px;
+    padding-top: 70px;
+    flex-grow: 1;
+    height: 100%;
+    overflow: scroll;
+}
+
+/* Title styling */
+#Title {
+    font-size: 28px;
+    -unity-font-style: bold;
+    color: rgb(255, 200, 100);
+    -unity-text-align: upper-center;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Section containers */
+.section {
+    background-color: rgba(255, 255, 255, 0.12);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+#PrefabSection {
+    background-color: rgba(70, 130, 180, 0.2);
+    border-color: rgba(70, 130, 180, 0.4);
+}
+
+#ParametersSection {
+    background-color: rgba(100, 100, 100, 0.2);
+    border-color: rgba(150, 150, 150, 0.3);
+}
+
+/* Section headers */
+.section-header {
+    font-size: 18px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    margin-bottom: 12px;
+}
+
+/* Group headers */
+.group-header {
+    font-size: 15px;
+    -unity-font-style: bold;
+    color: rgb(220, 220, 220);
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+/* Selected prefab label */
+#SelectedPrefabLabel {
+    color: rgb(255, 200, 100);
+    font-size: 16px;
+    -unity-text-align: upper-center;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    -unity-font-style: bold;
+}
+
+/* Spawn button styling */
+#SpawnButton {
+    height: 45px;
+    font-size: 18px;
+    -unity-font-style: bold;
+    background-color: rgb(70, 130, 180);
+    color: rgb(255, 255, 255);
+    border-radius: 6px;
+    margin-top: 12px;
+    transition-duration: 0.2s;
+}
+
+#SpawnButton:hover {
+    background-color: rgb(90, 150, 200);
+    scale: 1.05;
+}
+
+#SpawnButton:active {
+    background-color: rgb(50, 110, 160);
+    scale: 0.98;
+}
+
+/* Clear button styling */
+#ClearButton {
+    height: 40px;
+    font-size: 15px;
+    -unity-font-style: bold;
+    background-color: rgb(180, 70, 70);
+    color: rgb(255, 255, 255);
+    border-radius: 6px;
+    margin-top: 8px;
+    transition-duration: 0.2s;
+}
+
+#ClearButton:hover {
+    background-color: rgb(200, 90, 90);
+    scale: 1.05;
+}
+
+#ClearButton:active {
+    background-color: rgb(160, 50, 50);
+    scale: 0.98;
+}
+
+/* Navigation buttons */
+#PrevButton, #NextButton {
+    width: 50px;
+    height: 35px;
+    font-size: 20px;
+    -unity-font-style: bold;
+    background-color: rgb(60, 60, 60);
+    color: rgb(255, 255, 255);
+    border-radius: 4px;
+}
+
+#PrevButton:hover, #NextButton:hover {
+    background-color: rgb(80, 80, 80);
+}
+
+#PrevButton:active, #NextButton:active {
+    background-color: rgb(40, 40, 40);
+}
+
+/* Dropdown styling */
+#PrefabDropdown {
+    flex-grow: 1;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+#PrefabDropdown Label {
+    min-width: 60px;
+    color: rgb(200, 200, 200);
+}
+
+/* Slider labels */
+.unity-slider Label,
+.unity-slider-int Label {
+    min-width: 140px;
+    color: rgb(220, 220, 220);
+}
+
+/* Slider track and dragger */
+.unity-slider__input,
+.unity-slider-int__input {
+    background-color: rgba(50, 50, 50, 0.8);
+}
+
+.unity-slider__dragger,
+.unity-slider-int__dragger {
+    background-color: rgb(70, 130, 180);
+    border-radius: 8px;
+}
+
+.unity-slider__dragger:hover,
+.unity-slider-int__dragger:hover {
+    background-color: rgb(90, 150, 200);
+}
+
+/* Toggle styling */
+.unity-toggle Label {
+    color: rgb(220, 220, 220);
+}
+
+.unity-toggle__input {
+    background-color: rgba(50, 50, 50, 0.8);
+}
+
+.unity-toggle__checkmark {
+    background-color: rgb(70, 130, 180);
+}
+
+/* Input fields (slider value displays) */
+.unity-base-field__input {
+    background-color: rgba(30, 30, 30, 0.8);
+    color: rgb(255, 255, 255);
+    border-radius: 3px;
+    padding: 3px;
+}
+
+/* Instructions text */
+.instructions {
+    margin-top: 20px;
+    color: rgb(180, 180, 180);
+    font-size: 13px;
+    -unity-text-align: upper-center;
+    font-style: italic;
+}
+
+/* Spacing helpers */
+.margin-bottom-small {
+    margin-bottom: 5px;
+}
+
+.margin-bottom-medium {
+    margin-bottom: 10px;
+}
+
+.margin-bottom-large {
+    margin-bottom: 15px;
+}
+
+/* Rewind slider custom styling */
+#RewindSlider {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#RewindSlider .unity-slider__tracker {
+    background-color: rgba(100, 100, 100, 0.4); /* Gray background for available time */
+    height: 20px;
+    border-radius: 10px;
+}
+
+#RewindSlider .unity-slider__dragger {
+    background-color: rgb(70, 130, 180); /* Blue dragger */
+    border-radius: 10px;
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+#RewindSlider .unity-slider__dragger:hover {
+    background-color: rgb(90, 150, 200);
+    scale: 1.1;
+}
+
+#RewindSlider .unity-slider__dragger:active {
+    background-color: rgb(50, 110, 160);
+    scale: 0.95;
+}
+
+/* Rewind slider tracker fill (shows current rewind position) */
+#RewindSlider .unity-slider__tracker-fill {
+    background-color: rgba(70, 130, 180, 0.6); /* Semi-transparent blue for rewound portion */
+    border-radius: 10px 0 0 10px;
+}
+
+/* Time Rewinder section */
+#TimeRewinderSection {
+    background-color: rgba(70, 130, 180, 0.15);
+    border-color: rgba(70, 130, 180, 0.3);
+}
+
+/* Rewind control buttons */
+.rewind-button {
+    flex-grow: 1;
+    height: 35px;
+    font-size: 13px;
+    background-color: rgb(70, 130, 180);
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+    margin: 2px;
+}
+
+.rewind-button:hover {
+    background-color: rgb(90, 150, 200);
+}
+
+.rewind-button:active {
+    background-color: rgb(50, 110, 160);
+}
