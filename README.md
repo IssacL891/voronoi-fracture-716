@@ -3,7 +3,7 @@
 Serena Akpoyibo, Issac Lee, Galen Sagarin
 
 ## Link to Project:
-issacl891.github.io/voronoi-fracture-716/
+[Link to Voronoi Fractures](issacl891.github.io/voronoi-fracture-716/)
 
 ## Project Description
 This is a application tool that implements Voronoi fractures on a 2D plane in C# and visualizes them using Unity game engine. The application is designed to show the effect of a shape colliding with the surface or another shape.
