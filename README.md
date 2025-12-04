@@ -1,4 +1,4 @@
-# Voronoi Fracture Pedadogical Aid
+# Voronoi Fracture Application
 ## Team Members
 Serena Akpoyibo, Issac Lee, Galen Sagarin
 
