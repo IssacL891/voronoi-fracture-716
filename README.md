@@ -8,6 +8,8 @@ issacl891.github.io/voronoi-fracture-716/
 ## Project Description
 This is a application tool that implements Voronoi fractures on a 2D plane in C# and visualizes them using Unity game engine. The application is designed to show the effect of a shape colliding with the surface or another shape.
 
+## Background Information 
+
 ## User Interaction
 * Wait for collision :- When enabled, it would not display fracture immediately
 * Impact Threshold :- Measure of force needed to create fracture
@@ -25,4 +27,7 @@ The list of triangles is then passed to the Voronoi fractures generation. For ea
 
 * **2nd Step:** Clip the diagram into the actual polygon.
 * **3rd Step:** The fragments (boundary of Voronoi cells) are passed to Unity which creates a mesh (the object represented for the Physics engine) and a sprite (the object represented for the rendering engine) for each cell.
+
+#### Object Pooling
+One of the optimizations we did to make things run more smoothly was using object pooling. 
 
