@@ -29,5 +29,5 @@ The list of triangles is then passed to the Voronoi fractures generation. For ea
 * **3rd Step:** The fragments (boundary of Voronoi cells) are passed to Unity which creates a mesh (the object represented for the Physics engine) and a sprite (the object represented for the rendering engine) for each cell.
 
 #### Object Pooling
-One of the optimizations we did to make things run more smoothly was using object pooling. 
+One of the optimizations we did to make things run more smoothly was using object pooling. Because it is not dynamic fracturing, we know what the fracture pieces are going to be like. In the background, whenever a new Voronoi diagram generate via the UI, we can pregenerate the pattern of fragments. These are stored in the object pool and every time we want to do fragmentation, we pull from there.
 
