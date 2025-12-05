@@ -86,8 +86,16 @@ While some of these algorithms are not the most efficient, since we are dealing 
 
 
 ### Related Projects
- * **Smash the Glass:** One of the projects that led to us picking this project was a previous project done in this class. Smash the glass created Voronoi fractures on a 3D shattered glass smashed by the user. [Click here](https://github.com/CJT-Jackton/SmashTheGlass?tab=readme-ov-file) for more details on the project.
- * **Interactive Voronoi Art:** This project explored displaying Voronoi cells being formed on an interactive floor where each additional person was a new center for a Voronoi cell. This project explored dynamically changing the points to be considered when finding Voronoi polygons. While we do not have dynamically changing points similar to this project, it was another inspiration for visualization and interaction between the user and application we were designing. [Click here](https://www.snibbe.com/art/boundaryfunctions) for more details on the project.
+#### Industry Implementations
+Most commercial game engines use pre-computed or physics-based fracturing rather than real-time Voronoi:
+*   **Unreal Engine (Chaos Destruction):** Uses a pre-fractured mesh approach. Artists break objects in the editor, and at runtime the engine swaps the whole mesh for the pre-made pieces. This is fast but not dynamic.
+*   **NVIDIA Blast:** A high-performance destruction library that uses hierarchical fracture graphs. Objects are pre-fractured into a tree of chunks, and at runtime only the relevant level of detail is activated based on impact force.
+
+Our approach differs by computing the Voronoi diagram and mesh generation **at runtime**, allowing for dynamic and unpredictable fracture patterns.
+
+#### Inspirations
+*   **Smash the Glass:** One of the projects that led to us picking this project was a previous project done in this class. Smash the glass created Voronoi fractures on a 3D shattered glass smashed by the user. [Click here](https://github.com/CJT-Jackton/SmashTheGlass?tab=readme-ov-file) for more details on the project.
+*   **Interactive Voronoi Art:** This project explored displaying Voronoi cells being formed on an interactive floor where each additional person was a new center for a Voronoi cell. This project explored dynamically changing the points to be considered when finding Voronoi polygons. While we do not have dynamically changing points similar to this project, it was another inspiration for visualization and interaction between the user and application we were designing. [Click here](https://www.snibbe.com/art/boundaryfunctions) for more details on the project.
 
 ### What are the needs for the problem domain
 For this specific problem domain, finding the perfect mathematical solution is often less important than finding a visually plausible and fast one.
