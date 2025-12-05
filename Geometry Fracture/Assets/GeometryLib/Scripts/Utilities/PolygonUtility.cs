@@ -5,8 +5,7 @@ using Geometry;
 namespace VoronoiFracture
 {
     /// <summary>
-    /// Utility methods for polygon operations including area calculation, 
-    /// point-in-polygon tests, and polygon simplification.
+    /// Utility methods for polygon operations.
     /// </summary>
     public static class PolygonUtility
     {
@@ -123,7 +122,7 @@ namespace VoronoiFracture
         }
 
         /// <summary>
-        /// Clean a Vector2 polygon by removing duplicates and collinear points.
+        /// Clean a polygon by removing duplicates and collinear points.
         /// </summary>
         public static List<Vector2> CleanPolygon(List<Vector2> polygon, float duplicateEpsilon = 1e-4f, float collinearEpsilon = 1e-4f)
         {
@@ -158,7 +157,7 @@ namespace VoronoiFracture
         }
 
         /// <summary>
-        /// Check if a polygon is simple (no self-intersections).
+        /// Check if a polygon is simple.
         /// </summary>
         public static bool IsSimple(List<Vector2> polygon)
         {

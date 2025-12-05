@@ -1,12 +1,9 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
-#endif
 
 /// <summary>
 /// Simple spawner for fracture objects.
-/// Instantiates a prefab (typically with VoronoiFracture2D) at mouse click position.
-/// Supports both Unity's new Input System and legacy Input manager.
+/// Instantiates a prefab at mouse click position.
 /// </summary>
 public class FractureSpawner2D : MonoBehaviour
 {
@@ -38,22 +35,13 @@ public class FractureSpawner2D : MonoBehaviour
 
     void Update()
     {
-        // Support both new Input System and legacy Input manager
-#if ENABLE_INPUT_SYSTEM
         var mouse = Mouse.current;
-        if (mouse != null)
-        {
-            if (spawnOnLeftClick && mouse.leftButton.wasPressedThisFrame)
-                SpawnAtMousePosition();
-            if (spawnOnRightClick && mouse.rightButton.wasPressedThisFrame)
-                SpawnAtMousePosition();
-        }
-#else
-        if (spawnOnLeftClick && Input.GetMouseButtonDown(0))
+        if (mouse == null) return;
+
+        if (spawnOnLeftClick && mouse.leftButton.wasPressedThisFrame)
             SpawnAtMousePosition();
-        if (spawnOnRightClick && Input.GetMouseButtonDown(1))
+        if (spawnOnRightClick && mouse.rightButton.wasPressedThisFrame)
             SpawnAtMousePosition();
-#endif
     }
 
     /// <summary>
@@ -75,9 +63,9 @@ public class FractureSpawner2D : MonoBehaviour
         }
 
         // Get mouse position and convert to world space
-        Vector3 mouseScreenPos = GetMouseScreenPosition();
+        Vector3 mouseScreenPos = (Vector3)Mouse.current.position.ReadValue();
         Vector3 worldPos = cam.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, cam.nearClipPlane));
-        worldPos.z = 0f; // 2D plane
+        worldPos.z = 0f;
         worldPos += (Vector3)spawnOffset;
 
         // Instantiate prefab
@@ -89,19 +77,6 @@ public class FractureSpawner2D : MonoBehaviour
 
         // Ensure runtime fracture is enabled
         EnableRuntimeFracture(spawnedObject);
-    }
-
-    /// <summary>
-    /// Get mouse screen position using appropriate input system.
-    /// </summary>
-    private Vector3 GetMouseScreenPosition()
-    {
-#if ENABLE_INPUT_SYSTEM
-        var mouse = Mouse.current;
-        return mouse != null ? (Vector3)mouse.position.ReadValue() : Input.mousePosition;
-#else
-        return Input.mousePosition;
-#endif
     }
 
     /// <summary>

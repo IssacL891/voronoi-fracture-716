@@ -2,8 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Enables runtime fracturing for fragment pieces.
-/// Attached automatically to fragments during fracture if runtime fracture is enabled.
-/// When this fragment receives sufficient impact, it will fracture into smaller pieces.
+/// When this fragment receives enough impact, it will fracture into smaller pieces.
 /// </summary>
 public class FracturablePiece2D : MonoBehaviour
 {
@@ -14,8 +13,7 @@ public class FracturablePiece2D : MonoBehaviour
     [HideInInspector] public int remainingDepth = 1; // Maximum recursive fracture depth remaining
 
     /// <summary>
-    /// Validate owner reference on start. If null, disable this component.
-    /// This can happen after rewind operations or when the original object is destroyed.
+    /// Validate owner reference on start.
     /// </summary>
     void Start()
     {
@@ -59,7 +57,6 @@ public class FracturablePiece2D : MonoBehaviour
 
     /// <summary>
     /// Fracture this fragment into smaller pieces.
-    /// Creates a temporary VoronoiFracture2D component with inherited settings.
     /// </summary>
     private void FractureThisFragment()
     {
@@ -110,7 +107,7 @@ public class FracturablePiece2D : MonoBehaviour
         // Execute fracture
         fractureComponent.Fracture();
 
-        // Clean up temporary component (GameObject will be deactivated by Fracture)
+        // Clean up temporary component
         Destroy(fractureComponent);
     }
 }

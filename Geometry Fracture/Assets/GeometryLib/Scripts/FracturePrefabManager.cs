@@ -1,10 +1,10 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 
 /// <summary>
 /// Manages a collection of fracture prefabs with their individual settings.
-/// Allows runtime selection and spawning of different fracturable objects.
 /// </summary>
 public class FracturePrefabManager : MonoBehaviour
 {
@@ -51,27 +51,17 @@ public class FracturePrefabManager : MonoBehaviour
     {
         if (!spawnOnClick) return;
 
-        // Check if mouse is over UI before spawning
         if (IsPointerOverUI())
             return;
 
-        // Check if mouse is over another object before spawning
         if (IsPointerOverObject())
             return;
 
-        // Support both input systems
-#if ENABLE_INPUT_SYSTEM
-        var mouse = UnityEngine.InputSystem.Mouse.current;
+        var mouse = Mouse.current;
         if (mouse != null && mouse.leftButton.wasPressedThisFrame)
         {
             SpawnSelected();
         }
-#else
-        if (Input.GetMouseButtonDown(0))
-        {
-            SpawnSelected();
-        }
-#endif
     }
 
     /// <summary>
@@ -79,15 +69,11 @@ public class FracturePrefabManager : MonoBehaviour
     /// </summary>
     private bool IsPointerOverUI()
     {
-        Vector2 mousePos;
-#if ENABLE_INPUT_SYSTEM
-        var mouse = UnityEngine.InputSystem.Mouse.current;
-        mousePos = mouse != null ? mouse.position.ReadValue() : (Vector2)Input.mousePosition;
-#else
-        mousePos = Input.mousePosition;
-#endif
+        var mouse = Mouse.current;
+        if (mouse == null) return false;
+        
+        Vector2 mousePos = mouse.position.ReadValue();
 
-        // Check for UI Toolkit UIDocuments
         var uiDocuments = FindObjectsByType<UIDocument>(FindObjectsSortMode.None);
         foreach (var uiDoc in uiDocuments)
         {
@@ -96,7 +82,6 @@ public class FracturePrefabManager : MonoBehaviour
                 var pickedElement = uiDoc.rootVisualElement.panel?.Pick(mousePos);
                 if (pickedElement != null && pickedElement != uiDoc.rootVisualElement.panel.visualTree)
                 {
-                    // Check if the picked element can receive events (not ignored)
                     if (pickedElement.pickingMode == PickingMode.Position)
                     {
                         return true;
@@ -104,39 +89,24 @@ public class FracturePrefabManager : MonoBehaviour
                 }
             }
         }
-
-        // Fallback: check legacy UI EventSystem
-        if (UnityEngine.EventSystems.EventSystem.current != null)
-        {
-            return UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
-        }
-
         return false;
     }
 
     /// <summary>
-    /// Check if the mouse pointer is currently over any 2D object (collider).
+    /// Check if the mouse pointer is currently over any 2D object.
     /// </summary>
     private bool IsPointerOverObject()
     {
         var cam = targetCamera != null ? targetCamera : Camera.main;
         if (cam == null) return false;
 
-        Vector2 mousePos;
-#if ENABLE_INPUT_SYSTEM
-        var mouse = UnityEngine.InputSystem.Mouse.current;
-        mousePos = mouse != null ? mouse.position.ReadValue() : (Vector2)Input.mousePosition;
-#else
-        mousePos = Input.mousePosition;
-#endif
+        var mouse = Mouse.current;
+        if (mouse == null) return false;
 
-        // Convert screen position to world position
+        Vector2 mousePos = mouse.position.ReadValue();
         Vector2 worldPos = cam.ScreenToWorldPoint(mousePos);
-
-        // Perform 2D raycast at mouse position
         RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
 
-        // Return true if we hit any collider
         return hit.collider != null;
     }
 
@@ -191,32 +161,25 @@ public class FracturePrefabManager : MonoBehaviour
             return null;
         }
 
-        // Apply spawn offset
         worldPosition += (Vector3)spawnOffset;
         worldPosition.z = 0f;
 
-        // Instantiate prefab inactive so we can apply settings before Start/Awake run
         var instance = Instantiate(prefabData.prefab, worldPosition, Quaternion.identity);
         instance.SetActive(false);
         instance.name = $"{prefabData.name}";
-        
-        // Ensure the spawned instance has the "Fracture" tag (should inherit from prefab)
         instance.tag = "Fracture";
 
-        // Apply scale
         if (prefabData.spawnScale != 1f)
         {
             instance.transform.localScale = Vector3.one * prefabData.spawnScale;
         }
 
-        // Configure VoronoiFracture2D if present (before activation)
         var fractureComponent = instance.GetComponent<VoronoiFracture2D>();
         if (fractureComponent != null)
         {
             ApplyFractureSettings(instance, prefabData);
         }
 
-        // Apply initial velocity if rigidbody present
         if (prefabData.initialVelocity != Vector2.zero)
         {
             var rb = instance.GetComponent<Rigidbody2D>();
@@ -226,21 +189,18 @@ public class FracturePrefabManager : MonoBehaviour
             }
         }
 
-        // Now activate the instance so Awake/Start run with correct settings
         instance.SetActive(true);
-
         return instance;
     }
 
     /// <summary>
-    /// Apply prefab data settings to a VoronoiFracture2D component and add GenericRewind.
+    /// Apply prefab data settings to a VoronoiFracture2D component.
     /// </summary>
     private void ApplyFractureSettings(GameObject spawned, FracturePrefabData pref)
     {
         var fracture = spawned.GetComponent<VoronoiFracture2D>();
         if (fracture != null)
         {
-            // Apply settings
             fracture.siteCount = pref.siteCount;
             fracture.siteJitter = pref.siteJitter;
             fracture.enableRuntimeFracture = pref.enableRuntimeFracture;
@@ -250,25 +210,13 @@ public class FracturePrefabManager : MonoBehaviour
             fracture.runtimeBreakDepth = pref.runtimeBreakDepth;
             fracture.generateOverlay = pref.generateOverlay;
             fracture.overlayTextureSize = pref.overlayTextureSize;
+            fracture.randomSeed = Random.Range(0, 100000);
         }
         
-        // Register existing GenericRewind component with RewindManager
         var genericRewind = spawned.GetComponent<GenericRewind>();
         if (genericRewind != null && RewindManager.Instance != null)
         {
-            // Verify tracking is enabled (should be set in prefab, but double-check)
-            var type = typeof(GenericRewind);
-            var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
-            
-            var trackTransform = type.GetField("trackTransform", flags)?.GetValue(genericRewind);
-            Debug.Log($"Spawned '{spawned.name}' - GenericRewind trackTransform: {trackTransform}");
-            
             RewindManager.Instance.AddObjectForTracking(genericRewind, RewindManager.OutOfBoundsBehaviour.DisableDestroy);
-            Debug.Log($"Registered '{spawned.name}' with RewindManager");
-        }
-        else if (genericRewind == null)
-        {
-            Debug.LogWarning($"Spawned '{spawned.name}' does NOT have GenericRewind component!");
         }
     }
 
@@ -314,19 +262,15 @@ public class FracturePrefabManager : MonoBehaviour
             return Vector3.zero;
         }
 
-        Vector3 mouseScreenPos;
-#if ENABLE_INPUT_SYSTEM
-        var mouse = UnityEngine.InputSystem.Mouse.current;
-        mouseScreenPos = mouse != null ? (Vector3)mouse.position.ReadValue() : Input.mousePosition;
-#else
-        mouseScreenPos = Input.mousePosition;
-#endif
+        var mouse = Mouse.current;
+        if (mouse == null) return Vector3.zero;
 
+        Vector3 mouseScreenPos = (Vector3)mouse.position.ReadValue();
         return cam.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, cam.nearClipPlane));
     }
 
     /// <summary>
-    /// Update current prefab settings (useful for UI sliders).
+    /// Update current prefab settings.
     /// </summary>
     public void UpdateCurrentPrefabSettings(
         int? siteCount = null,

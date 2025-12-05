@@ -24,8 +24,7 @@ namespace VoronoiFracture
             for (int i = 0; i < polygon.Length; i++)
                 vertices[i] = polygon[i];
 
-            if (PolygonUtility.SignedArea(vertices) < 0f)
-                System.Array.Reverse(vertices);
+            PolygonUtility.EnsureCCW(ref vertices);
 
             // Convert to 3D vertices
             var vertices3D = new Vector3[vertices.Length];
@@ -113,7 +112,7 @@ namespace VoronoiFracture
                 }
 
                 if (!earFound)
-                    break; // Prevent infinite loop
+                    break;
             }
 
             // Add final triangle if exactly 3 vertices remain
@@ -128,7 +127,7 @@ namespace VoronoiFracture
         }
 
         /// <summary>
-        /// Check if three consecutive vertices form a convex angle (CCW winding assumed).
+        /// Check if three consecutive vertices form a convex angle
         /// </summary>
         private static bool IsConvex(Vector2 a, Vector2 b, Vector2 c)
         {
@@ -136,7 +135,7 @@ namespace VoronoiFracture
         }
 
         /// <summary>
-        /// Test if a point is inside a triangle using barycentric coordinates.
+        /// Test if a point is inside a triangle.
         /// </summary>
         private static bool PointInTriangle(Vector2 p, Vector2 a, Vector2 b, Vector2 c)
         {

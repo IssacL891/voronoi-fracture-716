@@ -58,13 +58,13 @@ Shader "Custom/PixelToon"
 
                 float4 c = tex2D(_MainTex, uv);
 
-                // posterize (quantize color ramps) to achieve toon steps
+                // posterize
                 if (_PosterizeLevels > 1.0)
                 {
                     c.rgb = floor(c.rgb * _PosterizeLevels) / _PosterizeLevels;
                 }
 
-                // apply tint (useful to slightly adjust final color)
+                // apply tint
                 c.rgb *= _ColorTint.rgb;
 
                 return c;

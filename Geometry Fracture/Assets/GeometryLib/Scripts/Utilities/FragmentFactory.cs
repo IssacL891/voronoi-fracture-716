@@ -70,7 +70,7 @@ namespace VoronoiFracture
             // Create GameObject
             var fragmentGO = CreateFragmentGameObject(centroid);
 
-            // Convert to local space relative to centroid
+            // Convert to local space
             var localVertices = ConvertToLocalSpace(cleanedPolygon, centroid);
 
             // Ensure CCW winding
@@ -81,24 +81,22 @@ namespace VoronoiFracture
             SetupRigidbody(fragmentGO);
             var mesh = SetupMesh(fragmentGO, localVertices);
 
-            // Generate overlay texture if enabled
             if (generateOverlay && mesh != null)
             {
                 SetupOverlay(fragmentGO, mesh, cleanedPolygon, color, centroid);
             }
 
-            // Add runtime fracture capability if enabled
             if (enableRuntimeFracture)
             {
                 SetupRuntimeFracture(fragmentGO);
             }
             
-            // Add GenericRewind for time rewinder support on fragments
+            // Add GenericRewind for time rewinder
             if (RewindManager.Instance != null)
             {
                 var genericRewind = fragmentGO.AddComponent<GenericRewind>();
                 
-                // CRITICAL: Enable tracking fields using reflection (they're private SerializeFields)
+                // Enable tracking fields using reflection
                 var type = typeof(GenericRewind);
                 var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
                 
@@ -174,7 +172,7 @@ namespace VoronoiFracture
             var mesh = FragmentMeshBuilder.CreateMesh(localVertices);
             meshFilter.sharedMesh = mesh;
 
-            // Register with RewindManager if GenericRewind exists (fragments spawned at runtime)
+            // Register with RewindManager
             var genericRewind = go.GetComponent<GenericRewind>();
             if (genericRewind != null && RewindManager.Instance != null)
             {
@@ -187,7 +185,6 @@ namespace VoronoiFracture
         private void SetupOverlay(GameObject fragmentGO, Mesh baseMesh, List<Point> worldPolygon,
             Color color, Vector2 centroid)
         {
-            // Generate texture
             var texture = FragmentTextureGenerator.GenerateTexture(
                 worldPolygon, color, Mathf.Clamp(overlayTextureSize, 64, 2048));
 
@@ -205,7 +202,7 @@ namespace VoronoiFracture
 #endif
             overlayGO.transform.localPosition = Vector3.zero;
 
-            // Create mesh that matches fragment geometry
+            // Create mesh
             var overlayFilter = overlayGO.AddComponent<MeshFilter>();
             var overlayRenderer = overlayGO.AddComponent<MeshRenderer>();
 
@@ -222,7 +219,7 @@ namespace VoronoiFracture
             mesh.vertices = baseMesh.vertices;
             mesh.triangles = baseMesh.triangles;
 
-            // Calculate UV bounds from world polygon
+            // Calculate UV bounds
             float minX = float.MaxValue, minY = float.MaxValue;
             float maxX = float.MinValue, maxY = float.MinValue;
 
@@ -271,7 +268,7 @@ namespace VoronoiFracture
             int baseQueue = fragmentMaterial != null ? fragmentMaterial.renderQueue : 3000;
             renderer.sharedMaterial.renderQueue = baseQueue + 1;
 
-            // Set texture using MaterialPropertyBlock (no material instance needed)
+            // Set texture
             var propertyBlock = new MaterialPropertyBlock();
             propertyBlock.SetTexture("_MainTex", texture);
             renderer.SetPropertyBlock(propertyBlock);

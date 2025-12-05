@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 /// <summary>
@@ -43,6 +44,7 @@ public class FractureUIController : MonoBehaviour
     private Button _resetTimeButton;
     private bool _isTimePaused = false;
     private bool _isSliderBeingDragged = false;
+    private bool _wasTimePausedBeforeRewind = false;
 
     private float _lastRefreshTime;
     private int _lastSelectedIndex = -1;
@@ -53,18 +55,11 @@ public class FractureUIController : MonoBehaviour
         // Ensure only one active instance to avoid overlapping duplicate UIs
         if (_instance != null && _instance != this)
         {
-            Debug.LogWarning("FractureUIController: Another instance already exists. Disabling this duplicate to prevent overlapping UI.");
+            Debug.LogWarning("FractureUIController: Another instance already exists. Disabling this duplicate.");
             gameObject.SetActive(false);
             return;
         }
         _instance = this;
-
-        // Warn if legacy Canvas-based UI is present which may overlap/interfere
-        var legacyUIs = FindObjectsByType<VoronoiFractureUI>(FindObjectsSortMode.None);
-        if (legacyUIs != null && legacyUIs.Length > 0)
-        {
-            Debug.LogWarning("FractureUIController: Detected legacy Canvas UI (VoronoiFractureUI). Consider disabling/removing it to avoid overlapping controls.");
-        }
     }
 
     private void OnEnable()
@@ -113,30 +108,19 @@ public class FractureUIController : MonoBehaviour
             _lastSelectedIndex = prefabManager.selectedPrefabIndex;
         }
         
-        // Update slider range based on available rewind time
-        if (_rewindSlider != null && RewindManager.Instance != null)
+        // Update label to show available rewind time
+        if (_rewindTimeLabel != null && RewindManager.Instance != null)
         {
             float available = RewindManager.Instance.HowManySecondsAvailableForRewind;
-            float maxTime = Mathf.Min(available, 12f); // Cap at 12 seconds
-            
-            // Only update if different to avoid constant resets
-            if (Mathf.Abs(_rewindSlider.highValue - maxTime) > 0.01f)
-            {
-                _rewindSlider.highValue = maxTime;
-            }
-            
-            // Update label to show available time
-            if (_rewindTimeLabel != null)
-            {
-                _rewindTimeLabel.text = $"Available: {available:F1}s";
-            }
+            _rewindTimeLabel.text = $"Available: {available:F1}s";
         }
         
-        // Continuously update rewind position while slider is being dragged
-        if (_isSliderBeingDragged && _rewindSlider != null && RewindManager.Instance != null && !_isTimePaused)
+        // CRITICAL: Detect mouse release while slider is being dragged
+        // UI Toolkit's PointerCaptureOutEvent doesn't fire reliably, so we use Input System directly
+        if (_isSliderBeingDragged && Mouse.current != null && Mouse.current.leftButton.wasReleasedThisFrame)
         {
-            float rewindAmount = _rewindSlider.value;
-            RewindManager.Instance.SetTimeSecondsInRewind(rewindAmount);
+            Debug.Log("Mouse button released - stopping rewind via Update()");
+            StopSliderRewind();
         }
     }
 
@@ -164,6 +148,49 @@ public class FractureUIController : MonoBehaviour
         _rewindSlider = _root.Q<Slider>("RewindSlider");
         _pauseTimeButton = _root.Q<Button>("PauseTimeButton");
         _resetTimeButton = _root.Q<Button>("ResetTimeButton");
+    }
+    
+    /// <summary>
+    /// Stops the slider-based rewind and commits the final state.
+    /// Called when user releases the mouse button.
+    /// </summary>
+    private void StopSliderRewind()
+    {
+        if (!_isSliderBeingDragged) return;
+        
+        bool wasDragging = _isSliderBeingDragged;
+        _isSliderBeingDragged = false;
+        
+        if (RewindManager.Instance == null) return;
+        
+        // Stop the rewind if we're actually rewinding
+        if (RewindManager.Instance.IsBeingRewinded)
+        {
+            RewindManager.Instance.StopRewindTimeBySeconds();
+            Debug.Log("Rewind stopped and committed");
+        }
+        
+        // Re-enable tracking
+        RewindManager.Instance.TrackingEnabled = true;
+        
+        // Restore time paused state if it was paused before
+        if (_wasTimePausedBeforeRewind && wasDragging)
+        {
+            Time.timeScale = 0f;
+            RewindManager.Instance.TrackingEnabled = false;
+            Debug.Log("Restored paused state");
+        }
+        
+        // Reset flags
+        _wasTimePausedBeforeRewind = false;
+        
+        // Reset slider to 0 after committing
+        if (_rewindSlider != null)
+        {
+            _rewindSlider.SetValueWithoutNotify(0f);
+        }
+        
+        Debug.Log("Slider state fully reset, ready for next rewind");
     }
 
     private void SetupCallbacks()
@@ -270,61 +297,58 @@ public class FractureUIController : MonoBehaviour
             _rewindSlider.highValue = 12f;
             _rewindSlider.value = 0f;
             
-            // Register value change callback
+            // Use value change to detect drag start and update preview
             _rewindSlider.RegisterValueChangedCallback(evt =>
             {
                 if (RewindManager.Instance == null) return;
                 
                 float newValue = evt.newValue;
-                float oldValue = evt.previousValue;
+                float available = RewindManager.Instance.HowManySecondsAvailableForRewind;
+                float clampedValue = Mathf.Min(newValue, available);
                 
-                Debug.Log($"Slider value changed from {oldValue:F2} to {newValue:F2}");
+                Debug.Log($"Slider value changed: {newValue}, available: {available}, dragging: {_isSliderBeingDragged}, isRewinding: {RewindManager.Instance.IsBeingRewinded}");
                 
-                // If slider moved away from 0, start rewind mode and pause time
-                if (oldValue == 0f && newValue > 0f)
+                // If not dragging yet and value moved from 0, start rewind
+                if (!_isSliderBeingDragged && newValue > 0.01f)
                 {
+                    // Safety reset: if IsBeingRewinded is true but we're not dragging, force stop first
+                    if (RewindManager.Instance.IsBeingRewinded)
+                    {
+                        Debug.Log("Safety reset: stopping previous stuck rewind");
+                        RewindManager.Instance.StopRewindTimeBySeconds();
+                        RewindManager.Instance.TrackingEnabled = true;
+                    }
+                    
                     _isSliderBeingDragged = true;
+                    _wasTimePausedBeforeRewind = _isTimePaused;
                     
-                    // Pause time and tracking to prevent conflicts (only if not already paused)
-                    if (!_isTimePaused)
+                    // CRITICAL: Time.timeScale MUST be > 0 for rewind preview to work!
+                    if (Time.timeScale == 0f)
                     {
-                        _isTimePaused = true;
-                        RewindManager.Instance.TrackingEnabled = false;
-                        Time.timeScale = 0f;
-                        
-                        // Update pause button text
-                        if (_pauseTimeButton != null)
-                        {
-                            _pauseTimeButton.text = "Resume Time";
-                        }
-                        
-                        Debug.Log("Starting rewind mode - Time paused");
-                    }
-                    else
-                    {
-                        Debug.Log("Starting rewind mode - Time already paused");
+                        Time.timeScale = 1f;
+                        Debug.Log("Set timeScale to 1 for rewind preview");
                     }
                     
-                    RewindManager.Instance.StartRewindTimeBySeconds(0);
-                }
-                
-                // Update rewind position if actively dragging
-                if (_isSliderBeingDragged && newValue > 0f)
-                {
-                    Debug.Log($"Rewinding to {newValue}s");
-                    RewindManager.Instance.SetTimeSecondsInRewind(newValue);
-                }
-                
-                // If slider returned to 0, stop rewind mode (keep time paused)
-                if (newValue == 0f && _isSliderBeingDragged)
-                {
-                    _isSliderBeingDragged = false;
-                    Debug.Log("Stopping rewind mode - Time remains paused");
-                    RewindManager.Instance.StopRewindTimeBySeconds();
+                    // Pause tracking
+                    RewindManager.Instance.TrackingEnabled = false;
                     
-                    // Time stays paused so user can see the result
-                    // They can manually resume using the Resume Time button
+                    Debug.Log($"Starting rewind at {clampedValue} seconds");
+                    RewindManager.Instance.StartRewindTimeBySeconds(clampedValue);
                 }
+                // If already dragging, just update the position
+                else if (_isSliderBeingDragged && RewindManager.Instance.IsBeingRewinded)
+                {
+                    Debug.Log($"Updating rewind to {clampedValue} seconds");
+                    RewindManager.Instance.SetTimeSecondsInRewind(clampedValue);
+                }
+            });
+            
+            // Fallback: Detect when slider loses pointer capture
+            // Note: This doesn't fire reliably, so we also check Input.GetMouseButtonUp in Update()
+            _rewindSlider.RegisterCallback<PointerCaptureOutEvent>(evt =>
+            {
+                Debug.Log($"PointerCaptureOut detected (fallback), dragging: {_isSliderBeingDragged}");
+                StopSliderRewind();
             });
         }
 

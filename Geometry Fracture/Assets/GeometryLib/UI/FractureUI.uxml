@@ -45,7 +45,7 @@
                     
                     <ui:Toggle label="Wait for Collision" name="WaitForCollisionToggle" value="false" class="margin-bottom-small" tooltip="Only fracture when objects collide with each other" picking-mode="Position" />
                     
-                    <ui:Slider picking-mode="Position" label="Impact Threshold" value="5" high-value="20" name="BreakImpactThresholdSlider" low-value="0" show-input-field="true" class="margin-bottom-small" />
+                    <ui:Slider picking-mode="Position" label="Impact Threshold" value="0.5" high-value="1" name="BreakImpactThresholdSlider" low-value="0" show-input-field="true" class="margin-bottom-small" />
                     
                     <ui:SliderInt picking-mode="Position" label="Runtime Sites" value="6" high-value="20" name="RuntimeSiteCountSlider" low-value="2" show-input-field="true" class="margin-bottom-small" />
                     

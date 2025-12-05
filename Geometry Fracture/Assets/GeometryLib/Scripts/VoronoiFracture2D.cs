@@ -125,8 +125,9 @@ public class VoronoiFracture2D : MonoBehaviour
         var worldPolygon = GetWorldSpacePolygon();
 
         // Ensure counter-clockwise winding
-        if (PolygonUtility.SignedArea(worldPolygon.ToArray()) < 0f)
-            worldPolygon.Reverse();
+        var polyArray = worldPolygon.ToArray();
+        PolygonUtility.EnsureCCW(ref polyArray);
+        worldPolygon = new List<Vector2>(polyArray);
 
         // Generate Voronoi sites
         var siteGenerator = new VoronoiSiteGenerator(randomSeed, siteJitter);
@@ -291,6 +292,7 @@ public class VoronoiFracture2D : MonoBehaviour
 
     /// <summary>
     /// Main fracture coroutine that processes sites and creates fragments.
+    /// Uses Geometry-Lib's Delaunay triangulation and Voronoi generation.
     /// </summary>
     private IEnumerator FractureCoroutine(List<Point> sites, List<Vector2> worldPolygon)
     {
@@ -306,12 +308,10 @@ public class VoronoiFracture2D : MonoBehaviour
         int processedCount = 0;
         float frameStartTime = Time.realtimeSinceStartup;
 
-        foreach (var site in sites)
-        {
-            // Clip Voronoi cell to polygon boundary
-            var clippedCell = clipper.ClipCellToPolygon(
-                site, sites, worldPolygon, polyCollider.bounds);
+        var voronoiCells = clipper.GenerateVoronoiCells(sites, worldPolygon, polyCollider.bounds);
 
+        foreach (var (site, clippedCell) in voronoiCells)
+        {
             if (clippedCell != null && clippedCell.Count >= 3)
             {
                 // Generate color for this fragment
@@ -569,9 +569,10 @@ public class VoronoiFracture2D : MonoBehaviour
             var clipper = new VoronoiCellClipper();
             Gizmos.color = Color.cyan;
 
-            foreach (var site in sites)
+            var voronoiCells = clipper.GenerateVoronoiCells(sites, worldPolygon, polyCollider.bounds);
+
+            foreach (var (site, clippedCell) in voronoiCells)
             {
-                var clippedCell = clipper.ClipCellToPolygon(site, sites, worldPolygon, polyCollider.bounds);
                 if (clippedCell == null || clippedCell.Count < 3)
                     continue;
 

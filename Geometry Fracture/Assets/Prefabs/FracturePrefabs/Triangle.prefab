@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 1019303421650704389}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.3905, y: 0.4804, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -83,15 +83,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 6068676757185149245, guid: 2f594fbee4871d141ad170efdc94a0aa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1.28, y: 1.28}
+  m_DrawMode: 1
+  m_Size: {x: 1.7394892, y: 1.0050743}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!60 &8472478417266813487
@@ -132,15 +132,15 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.28, y: 1.28}
-    newSize: {x: 1.28, y: 1.28}
+    oldSize: {x: 1.7414719, y: 1.5182062}
+    newSize: {x: 1.7394892, y: 1.0050743}
     adaptiveTilingThreshold: 0.5
-    drawMode: 0
+    drawMode: 1
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 1}
+    - - {x: 0.0029571056, y: 0.4958161}
       - {x: -0.866, y: -0.5}
       - {x: 0.866, y: -0.5}
   m_UseDelaunayMesh: 0
@@ -171,7 +171,7 @@ MonoBehaviour:
   timeBudgetMs: 8
   generateOverlay: 1
   overlayTextureSize: 512
-  drawSites: 1
+  drawSites: 0
   drawCells: 0
 --- !u!50 &2275748484528431039
 Rigidbody2D:

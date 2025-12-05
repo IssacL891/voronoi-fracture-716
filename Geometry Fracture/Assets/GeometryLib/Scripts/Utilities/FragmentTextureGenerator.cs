@@ -5,7 +5,7 @@ using Geometry;
 namespace VoronoiFracture
 {
     /// <summary>
-    /// Generates textures for Voronoi fragments using efficient scanline rasterization.
+    /// Generates textures for Voronoi fragments.
     /// </summary>
     public class FragmentTextureGenerator
     {
@@ -104,7 +104,7 @@ namespace VoronoiFracture
                     int w1 = EdgeFunction(c.x, c.y, a.x, a.y, x, y);
                     int w2 = EdgeFunction(a.x, a.y, b.x, b.y, x, y);
 
-                    // Check if pixel is inside triangle (allowing edge pixels)
+                    // Check if pixel is inside triangle
                     if ((w0 >= 0 && w1 >= 0 && w2 >= 0) || (w0 <= 0 && w1 <= 0 && w2 <= 0))
                     {
                         int index = y * width + x;
@@ -124,7 +124,7 @@ namespace VoronoiFracture
         }
 
         /// <summary>
-        /// Generate a deterministic color from a Voronoi site position.
+        /// Generate a color from a Voronoi site position.
         /// </summary>
         public static Color ColorFromSite(Point site, int randomSeed)
         {

@@ -204,7 +204,7 @@ Transform:
   m_GameObject: {fileID: 766868897}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.00079988, y: -5.2, z: 0}
+  m_LocalPosition: {x: 0, y: -6, z: 0}
   m_LocalScale: {x: 33, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -330,6 +330,19 @@ MonoBehaviour:
     overlayTextureSize: 512
     initialVelocity: {x: 0, y: 0}
     spawnScale: 1
+  - name: Polygon
+    prefab: {fileID: 1019303421650704389, guid: 2ddabab05b857784c8ab2ee69c4ad726, type: 3}
+    siteCount: 8
+    siteJitter: 0.2
+    enableRuntimeFracture: 1
+    breakImpactThreshold: 5
+    waitForCollision: 0
+    runtimeSiteCount: 6
+    runtimeBreakDepth: 1
+    generateOverlay: 1
+    overlayTextureSize: 512
+    initialVelocity: {x: 0, y: 0}
+    spawnScale: 1
   selectedPrefabIndex: 0
   targetCamera: {fileID: 866566129}
   spawnOffset: {x: 0, y: 0}
@@ -343,7 +356,7 @@ Transform:
   m_GameObject: {fileID: 773002627}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.73876, y: -3.25237, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -361,7 +374,6 @@ GameObject:
   - component: {fileID: 866566129}
   - component: {fileID: 866566128}
   - component: {fileID: 866566131}
-  - component: {fileID: 866566133}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -487,30 +499,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!114 &866566133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 866566127}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c88f5cead0c0b2a4eb05b5900433f8d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.PixelPerfectCamera
-  m_ComponentVersion: 1
-  m_AssetsPPU: 15
-  m_RefResolutionX: 320
-  m_RefResolutionY: 180
-  m_CropFrame: 4
-  m_GridSnapping: 1
-  m_FilterMode: 1
-  m_UpscaleRT: 0
-  m_PixelSnapping: 0
-  m_CropFrameX: 0
-  m_CropFrameY: 0
-  m_StretchFill: 0
 --- !u!1 &867307474
 GameObject:
   m_ObjectHideFlags: 0
