@@ -7,7 +7,7 @@ Serena Akpoyibo, Issac Lee, Galen Sagarin
 [Link to Voronoi Fractures](https://issacl891.github.io/voronoi-fracture-716/)
 
 ## Project Description
-This is a application tool that implements Voronoi fractures on a 2D plane in C# and visualizes them using Unity game engine. The application is designed to show the effect of a shape colliding with the surface or another shape.
+This is an application tool that implements Voronoi fractures on a 2D plane in C# and visualizes them using Unity game engine. The application is designed to show the effect of a shape colliding with the surface or another shape.
 
 ## Background Information 
 The effect of fracturing is often desired in video games, and other forms of animated media. This can extend to the collision timing and physics, the shape of the fracture, properties of the fragments, and more. However when implemented poorly, fracture effects can appear unrealistic, take too long to generate, or create too much computational load from fragments. All of these can be problems in video games, especially those in real time, where players would want quick feedback when they or something else breaks an object, and for its effects to smoothly blend with the rest of the game.
