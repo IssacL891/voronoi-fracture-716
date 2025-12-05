@@ -100,3 +100,5 @@ For this specific problem domain, finding the perfect mathematical solution is o
 * [Delaunay to Voronoi Algorithm with Bowyer-Watson Algorithm](https://en.wikipedia.org/wiki/Bowyer%E2%80%93Watson_algorithm?ref=gorillasun.de)
 * [Smash the Glass](https://github.com/CJT-Jackton/SmashTheGlass?tab=readme-ov-file)
 * [Interactive Voronoi Art](https://www.snibbe.com/art/boundaryfunctions)
+* [Clipper 2](https://angusj.com/clipper2/Docs/Overview.htm)
+* [Unity Time Rewinder](https://github.com/SitronX/UnityTimeRewinder)
