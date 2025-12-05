@@ -19,15 +19,64 @@ This is a application tool that implements Voronoi fractures on a 2D plane in C#
 **The break depth is capped at 3 because more depth was too computationally heavy.* 
 
 ## Implementation and Optimizations
-Some objects are predefined (circle, triangle, and square for now) which have the sprite(tells Unity how to render it), fracturable component (tells Unity object can break), and a collider(gives physics properties to Object). The user click spawns in an instance of the object.
+
+### Inputs and Outputs
+
+
+### Breakdown of algorithm
+The pipeline works by generating a new set of meshes on the fly from the original object's polygon collider.
 <br>
-* **1st Step:** Generate Voronoi diagram (that is a square) based off random seed points selected inside the polygon. The Voronoi implementation uses the Delaunay Triangulation to Voronoi fractures implementation. For Delaunay's triangulation, the random points are passed and a super triangle that would be broken into smaller, legal triangles is made. 
-Bad triangles are triangles that contain a new point in their circumcircle and these are removed. Only boundary edges (appear only once) kept and used to make triangles.
-The list of triangles is then passed to the Voronoi fractures generation. For each triangle, we associate the vertex with the circumcenter (the cells). The cells of each vertex are sorted counterclockwise and then returned as a mapping of vertex to its cells. 
+*   **1st Step: Site Generation** ($N$ points)
+    We generate random points inside the specific polygon boundary.
 
-* **2nd Step:** Clip the diagram into the actual polygon.
-* **3rd Step:** The fragments (boundary of Voronoi cells) are passed to Unity which creates a mesh (the object represented for the Physics engine) and a sprite (the object represented for the rendering engine) for each cell.
+*   **2nd Step: Delaunay Triangulation**
+    We use the Bowyer-Watson algorithm to triangulate these sites. This connects the points into a web of triangles that fills the space.
 
-#### Object Pooling
-One of the optimizations we did to make things run more smoothly was using object pooling. Because it is not dynamic fracturing, we know what the fracture pieces are going to be like. In the background, whenever a new Voronoi diagram generate via the UI, we can pregenerate the pattern of fragments. These are stored in the object pool and every time we want to do fragmentation, we pull from there.
+*   **3rd Step: Voronoi Cell Construction**
+    We compute the dual of the Delaunay triangulation. For every site, we find the circumcenters of its connected triangles. These circumcenters form the vertices of the Voronoi cell for that site.
 
+*   **4th Step: Clipping**
+    The raw Voronoi cells are square-bound. We use the **Vatti clipping algorithm (Clipper2 library)** to intersect these cells with the original object's collider. This crops the cells to the shape of the object.
+
+*   **5th Step: Mesh & Texture Generation**
+    *   **Mesh:** We convert the clipped polygons into Unity meshes using ear-clipping triangulation.
+    *   **Texture:** We rasterize a new texture for every shard to give it a unique internal color/pattern.
+
+### Complexity
+We analyzed the running time of our fracture pipeline.
+<br>
+**Variables:**
+*   **N**: Number of fracture pieces (fragments)
+*   **M**: Number of vertices in the object's collider
+*   **T**: Texture resolution (e.g., 512x512)
+
+#### Full Pipeline
+**Total Complexity:** $O(N \cdot T^2)$
+<br>
+This is the implementation we use, where we generate a unique texture for every shard. The **texture generation** ($T \times T$ loop) dominates all other steps.
+
+**Complexity Reference per Step:**
+*   **1. Site Gen:** $O(N \cdot M)$ (Rejection sampling)
+*   **2. Triangulation:** $O(N \log N)$ (Bowyer-Watson)
+*   **3. Voronoi Construction:** $O(N)$ (Linear graph traversal)
+*   **4. Clipping:** $O(N \cdot M \log M)$ (Clipper2 / Vatti's Algorithm)
+*   **5. Mesh Gen:** $O(N \cdot M^2)$ (Ear clipping)
+
+*   **6. Texture Gen:** **$O(N \cdot T^2)$** (Software rasterization - **The Bottleneck**)
+
+<br>
+
+**Impact:** If we have 10 fragments and a 512x512 texture, the texture step performs ~2.6 million operations, completely overshadowing the geometry steps.
+
+
+While some of these algorithms are not the most efficient, since we are dealing with small inputs the complexity is much less of a concern and often times simple algorithms are faster than complex ones for small inputs. For example our sites are bounded at 30 since anything bigger makes the pieces too small to see anyways. 
+
+
+### Related Projects
+
+
+### What are the needs for the problem domain
+For this specific problem domain, finding the perfect mathematical solution is often less important than finding a visually plausible and fast one.
+*   **Visual Plausibility over Accuracy:** We don't need an accurate solution. Instead, we just need the output to look like shattered glass or stone. Random Voronoi cells achieve this organic look effectively, even if they aren't physically rigorous.
+*   **Real-Time Performance:** The algorithm must run in milliseconds to avoid stutter during gameplay. Additionally, since the algorithim is usually ran with small inputs complexity is less of a concern compared to actual testing time.
+*   **Robustness:** The algorithm cannot crash, leave holes, or lose volume. By doing so, it would cause the object to look unnatural or break the game.
