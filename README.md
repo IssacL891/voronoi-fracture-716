@@ -90,3 +90,7 @@ For this specific problem domain, finding the perfect mathematical solution is o
 *   **Visual Plausibility over Accuracy:** We don't need an accurate solution. Instead, we just need the output to look like shattered glass or stone. Random Voronoi cells achieve this organic look effectively, even if they aren't physically rigorous.
 *   **Real-Time Performance:** The algorithm must run in milliseconds to avoid stutter during gameplay. Additionally, since the algorithim is usually ran with small inputs complexity is less of a concern compared to actual testing time.
 *   **Robustness:** The algorithm cannot crash, leave holes, or lose volume. By doing so, it would cause the object to look unnatural or break the game.
+
+
+## References
+* [Delaunay to Voronoi Algorithm with Bowyer-Watson Algorithm](https://en.wikipedia.org/wiki/Bowyer%E2%80%93Watson_algorithm?ref=gorillasun.de)
