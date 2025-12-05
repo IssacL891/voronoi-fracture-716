@@ -83,7 +83,8 @@ While some of these algorithms are not the most efficient, since we are dealing 
 
 
 ### Related Projects
-
+ * **Smash the Glass:** One of the projects that led to us picking this project was a previous project done in this class. Smash the glass created Voronoi fractures on a 3D shattered glass smashed by the user. [Click here](https://github.com/CJT-Jackton/SmashTheGlass?tab=readme-ov-file) for more details on the project.
+ * **Interactive Voronoi Art:** This project explored displaying Voronoi cells being formed on an interactive floor where each additional person was a new center for a Voronoi cell. This project explored dynamically changing the points to be considered when finding Voronoi polygons. While we do not have dynamically changing points similar to this project, it was another inspiration for visualization and interaction between the user and application we were designing. [Click here](https://www.snibbe.com/art/boundaryfunctions) for more details on the project.
 
 ### What are the needs for the problem domain
 For this specific problem domain, finding the perfect mathematical solution is often less important than finding a visually plausible and fast one.
@@ -94,3 +95,5 @@ For this specific problem domain, finding the perfect mathematical solution is o
 
 ## References
 * [Delaunay to Voronoi Algorithm with Bowyer-Watson Algorithm](https://en.wikipedia.org/wiki/Bowyer%E2%80%93Watson_algorithm?ref=gorillasun.de)
+* [Smash the Glass](https://github.com/CJT-Jackton/SmashTheGlass?tab=readme-ov-file)
+* [Interactive Voronoi Art](https://www.snibbe.com/art/boundaryfunctions)
