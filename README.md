@@ -3,6 +3,7 @@
 Serena Akpoyibo, Issac Lee, Galen Sagarin
 
 ## Link to Project:
+![Demo](Images/DEMO.gif)
 [Link to Voronoi Fractures](https://issacl891.github.io/voronoi-fracture-716/)
 
 ## Project Description
@@ -22,6 +23,15 @@ This is a application tool that implements Voronoi fractures on a 2D plane in C#
 
 ### Inputs and Outputs
 
+Given a collider like
+
+![Base Polygon](Images/Circle.png)
+
+The output would be
+
+![Output Polygon](Images/Circle_Output.png)
+
+As you can see the output is the orginal collider with individual shards made by voronoi cells.
 
 ### Breakdown of algorithm
 The pipeline works by generating a new set of meshes on the fly from the original object's polygon collider.
