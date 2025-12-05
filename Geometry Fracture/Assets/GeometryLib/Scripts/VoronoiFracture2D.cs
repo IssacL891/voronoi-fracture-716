@@ -88,7 +88,7 @@ public class VoronoiFracture2D : MonoBehaviour
         // If runtime fracture is enabled and we don't wait for collision, fracture immediately
         if (enableRuntimeFracture && !waitForCollision && !hasFracturedAtRuntime)
         {
-            // CRITICAL: Ensure pre-fracture visual exists before fracturing
+            // Ensure pre-fracture visual exists before fracturing
             // Otherwise we'll create empty holding objects with no graphics
             EnsurePreFractureVisual();
             
@@ -181,7 +181,7 @@ public class VoronoiFracture2D : MonoBehaviour
         gameObject.SetActive(true);
         hasFracturedAtRuntime = false;
 
-        // CRITICAL: Ensure pre-fracture visual is restored so object is visible
+        // Ensure pre-fracture visual is restored so object is visible
         if (preFractureVisual != null)
         {
             preFractureVisual.SetActive(true);
@@ -195,7 +195,6 @@ public class VoronoiFracture2D : MonoBehaviour
 
     /// <summary>
     /// Static helper method to find and clear ALL fragment parent objects in the scene.
-    /// Useful for UI "Clear All" buttons that need to remove all fragments regardless of source.
     /// </summary>
     public static int ClearAllFragmentParentsInScene()
     {

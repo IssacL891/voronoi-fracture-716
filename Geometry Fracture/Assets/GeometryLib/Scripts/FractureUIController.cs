@@ -77,7 +77,7 @@ public class FractureUIController : MonoBehaviour
         RefreshUI();
         UpdatePanelVisibility();
         
-        // CRITICAL: Check if RewindManager exists
+        // Check if RewindManager exists
         if (RewindManager.Instance == null)
         {
             Debug.LogError("FractureUIController: RewindManager.Instance is NULL! Time rewinder will NOT work. Make sure RewindManager GameObject exists in scene!");
@@ -115,7 +115,7 @@ public class FractureUIController : MonoBehaviour
             _rewindTimeLabel.text = $"Available: {available:F1}s";
         }
         
-        // CRITICAL: Detect mouse release while slider is being dragged
+        // Detect mouse release while slider is being dragged
         // UI Toolkit's PointerCaptureOutEvent doesn't fire reliably, so we use Input System directly
         if (_isSliderBeingDragged && Mouse.current != null && Mouse.current.leftButton.wasReleasedThisFrame)
         {
@@ -311,7 +311,7 @@ public class FractureUIController : MonoBehaviour
                 // If not dragging yet and value moved from 0, start rewind
                 if (!_isSliderBeingDragged && newValue > 0.01f)
                 {
-                    // Safety reset: if IsBeingRewinded is true but we're not dragging, force stop first
+                    // if IsBeingRewinded is true but we're not dragging, force stop first
                     if (RewindManager.Instance.IsBeingRewinded)
                     {
                         Debug.Log("Safety reset: stopping previous stuck rewind");
@@ -322,7 +322,7 @@ public class FractureUIController : MonoBehaviour
                     _isSliderBeingDragged = true;
                     _wasTimePausedBeforeRewind = _isTimePaused;
                     
-                    // CRITICAL: Time.timeScale MUST be > 0 for rewind preview to work!
+                    // Time.timeScale MUST be > 0 for rewind preview to work!
                     if (Time.timeScale == 0f)
                     {
                         Time.timeScale = 1f;
@@ -343,8 +343,7 @@ public class FractureUIController : MonoBehaviour
                 }
             });
             
-            // Fallback: Detect when slider loses pointer capture
-            // Note: This doesn't fire reliably, so we also check Input.GetMouseButtonUp in Update()
+            // Detect when slider loses pointer capture
             _rewindSlider.RegisterCallback<PointerCaptureOutEvent>(evt =>
             {
                 Debug.Log($"PointerCaptureOut detected (fallback), dragging: {_isSliderBeingDragged}");
